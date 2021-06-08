@@ -23,6 +23,20 @@ def parse_int(number):
 def slice_products_columns(row):
     return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
 
+def column_to_number(column):
+    total_characters = ord('z') - ord('a') + 1
+
+    def new_ord(col):
+        return ord(col) - ord('a')
+
+    col = column
+    acc = 0
+
+    for i, char in enumerate(reversed(col)):
+        acc += new_ord(col[i]) + i * total_characters
+
+    return acc
+
 
 def number_to_column(number):
     total_characters = ord('z') - ord('a') + 1
@@ -139,30 +153,40 @@ class ScriptConfiguration():
         csv_file = sys.argv[1]
         template_file = sys.argv[2]
 
-        customer_email_row_index = input(f'Ingresa la columna donde esta el email del consumidor (valor actual es {number_to_column(CUSTOMER_EMAIL_ROW_INDEX)})')
-        customer_email_row_index = parse_int(customer_email_row_index)
-        if customer_email_row_index != -1:
-            CUSTOMER_EMAIL_ROW_INDEX = customer_email_row_index
+        customer_email_row_index = input(f'Ingresa la columna donde esta el email del consumidor (valor actual es {number_to_column(CUSTOMER_EMAIL_ROW_INDEX)}): ')
+        customer_email_row_index = customer_email_row_index.strip().lower()
+        if len(customer_email_row_index) > 0:
+            CUSTOMER_EMAIL_ROW_INDEX = column_to_number(customer_email_row_index)
 
-        customer_name_row_index = input(f'Ingresa la columna donde esta el nombre del consumidor (valor actual es {number_to_column(CUSTOMER_NAME_ROW_INDEX)})')
-        customer_name_row_index = parse_int(customer_name_row_index)
-        if customer_name_row_index != -1:
-            CUSTOMER_NAME_ROW_INDEX = customer_name_row_index
+        customer_name_row_index = input(f'Ingresa la columna donde esta el nombre del consumidor (valor actual es {number_to_column(CUSTOMER_NAME_ROW_INDEX)}): ')
+        customer_name_row_index = customer_name_row_index.strip().lower()
+        if len(customer_name_row_index) > 0:
+            CUSTOMER_NAME_ROW_INDEX = column_to_number(customer_name_row_index)
 
-        first_product_column = input(f'Ingresa la primera columna de productos (valor actual es {number_to_column(FIRST_PRODUCT_COLUMN)})')
-        first_product_column = parse_int(first_product_column)
-        if first_product_column != -1:
-            FIRST_PRODUCT_COLUMN = first_product_column
+        first_product_column = input(f'Ingresa la primera columna de productos (valor actual es {number_to_column(FIRST_PRODUCT_COLUMN)}): ')
+        first_product_column.strip().lower()
+        if len(first_product_column) > 0:
+            FIRST_PRODUCT_COLUMN = column_to_number(first_product_column)
 
-        last_product_column = input(f'Ingresa la ultima columna de productos (valor actual es {number_to_column(LAST_PRODUCT_COLUMN)})')
-        last_product_column = parse_int(last_product_column)
-        if last_product_column != -1:
-            LAST_PRODUCT_COLUMN = last_product_column
+        last_product_column = input(f'Ingresa la ultima columna de productos (valor actual es {number_to_column(LAST_PRODUCT_COLUMN)}): ')
+        last_product_column = last_product_column.strip().lower()
+        if len(last_product_column) > 0:
+            LAST_PRODUCT_COLUMN = column_to_number(last_product_column)
 
-        total_column = input(f'Ingresa la columna de totales (valor actual es {number_to_column(TOTAL_COLUMN)})')
-        total_column = parse_int(total_column)
-        if total_column != -1:
-            TOTAL_COLUMN = total_column
+        total_column = input(f'Ingresa la columna de totales (valor actual es {number_to_column(TOTAL_COLUMN)}): ')
+        total_column = total_column.strip().lower()
+        if len(total_column) > 0:
+            TOTAL_COLUMN = column_to_number(total_column)
+
+        print("\n\n")
+        print("Configuration actual:")
+        print("-------------------------------------------------------------------------------------------")
+        print("CUSTOMER_EMAIL_ROW_INDEX", number_to_column(CUSTOMER_EMAIL_ROW_INDEX))
+        print("CUSTOMER_NAME_ROW_INDEX", number_to_column(CUSTOMER_NAME_ROW_INDEX))
+        print("FIRST_PRODUCT_COLUMN", number_to_column(FIRST_PRODUCT_COLUMN))
+        print("LAST_PRODUCT_COLUMN", number_to_column(LAST_PRODUCT_COLUMN))
+        print("TOTAL_COLUMN", number_to_column(TOTAL_COLUMN))
+        print("-------------------------------------------------------------------------------------------")
 
         return csv_file, template_file
 
