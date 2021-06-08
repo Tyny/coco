@@ -1,20 +1,9 @@
 #!/usr/bin/python
-
-# ./coco.py compras1.csv email.txt
-
-# schema
-# row[3] Nombre y Apellido
-# row[4] email
-
-#usar en el futuro column_name_to_index
-
-# a veces una persona pide 2 veces
-#
-#
-#
-#
-#
-#
+import sys
+import csv
+import locale
+from string import Template
+locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
 FIRST_PRODUCT_COLUMN = 8
 TOTAL_COLUMN = -2
@@ -99,12 +88,16 @@ class OrderPresenter(Presenter):
 
 
 class EmailPresenter(Presenter):
-    def __init__(self, customer, orders):
+    def __init__(self, email_template, customer, orders):
+        self.template = email_template
         self.customer = customer
         self.customer_orders = orders
 
     def present(self):
-        return f'Enviar a: {self.customer.get_email()}\n\nHola {self.customer.get_name().title()}!\n{self._present_orders()}'
+        return f'Enviar a: {self.customer.get_email()}\n\n{self.present_body()}'
+
+    def present_body(self):
+        return template.substitute({'usuario': self.customer.get_name().title(), "pedidos": self._orders_table()})
 
     def _present_orders(self):
         return f'Este es tu pedido: \n{self._orders_table()}\n\n{self._present_total()}'
@@ -122,13 +115,15 @@ class EmailPresenter(Presenter):
 
 
 if __name__ == '__main__':
-    import sys
-    import csv
-    import locale
-    locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
+
 
     csv_file = sys.argv[1]
     template_file = sys.argv[2]
+    template = None
+
+    with open(f'./template.txt', 'r') as template_file:
+        template = Template(template_file.read())
+
 
     with open(f'./{csv_file}', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -141,7 +136,7 @@ if __name__ == '__main__':
                 continue
 
             orders = CustomerOrdersFactory.create_customer_order(products, customer)
-            presenters.append(EmailPresenter(customer, orders))
+            presenters.append(EmailPresenter(template, customer, orders))
 
         for presenter in presenters:
             print("----------------------------------------------------------------------")

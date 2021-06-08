@@ -1,0 +1,8 @@
+Hola $usuario!
+
+Este es tu pedido:
+
+$pedidos
+
+Retira tu pedido el dia Martes.
+Muchas gracias!
