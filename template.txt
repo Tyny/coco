@@ -4,5 +4,7 @@ Este es tu pedido:
 
 $pedidos
 
+El total es $total
+
 Retira tu pedido el dia Martes.
 Muchas gracias!

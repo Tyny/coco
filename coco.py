@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import sys
 import csv
 import locale
@@ -6,7 +6,11 @@ from string import Template
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
 FIRST_PRODUCT_COLUMN = 8
-TOTAL_COLUMN = -2
+LAST_PRODUCT_COLUMN = 131
+TOTAL_COLUMN = 132
+
+CUSTOMER_NAME_ROW_INDEX = 3
+CUSTOMER_EMAIL_ROW_INDEX = 1
 
 
 def parse_int(number):
@@ -17,13 +21,22 @@ def parse_int(number):
 
 
 def slice_products_columns(row):
-    return row[FIRST_PRODUCT_COLUMN:TOTAL_COLUMN]
+    return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
+
+
+def number_to_column(number):
+    total_characters = ord('z') - ord('a') + 1
+
+    mod = (number % total_characters)
+    times = (number // total_characters)
+
+    if times > 0:
+        return chr(ord('a') + times - 1).upper() + chr(ord('a') + mod).upper()
+    else:
+        return chr(ord('a') + mod).upper()
 
 
 class Customer:
-    CUSTOMER_NAME_ROW_INDEX = 3
-    CUSTOMER_EMAIL_ROW_INDEX = 1
-
     @staticmethod
     def create_from_csv_row(csv_row):
         return Customer(csv_row)
@@ -32,10 +45,10 @@ class Customer:
         self.csv_row = csv_row
 
     def get_name(self):
-        return self.csv_row[Customer.CUSTOMER_NAME_ROW_INDEX]
+        return self.csv_row[CUSTOMER_NAME_ROW_INDEX]
 
     def get_email(self):
-        return self.csv_row[Customer.CUSTOMER_EMAIL_ROW_INDEX]
+        return self.csv_row[CUSTOMER_EMAIL_ROW_INDEX]
 
     def get_orders(self):
         return slice_products_columns(self.csv_row)
@@ -97,10 +110,11 @@ class EmailPresenter(Presenter):
         return f'Enviar a: {self.customer.get_email()}\n\n{self.present_body()}'
 
     def present_body(self):
-        return template.substitute({'usuario': self.customer.get_name().title(), "pedidos": self._orders_table()})
-
-    def _present_orders(self):
-        return f'Este es tu pedido: \n{self._orders_table()}\n\n{self._present_total()}'
+        return template.substitute({
+            'usuario': self.customer.get_name().title(),
+            "pedidos": self._orders_table(),
+            "total": self._present_total()}
+        )
 
     def _orders_table(self):
         table = []
@@ -111,17 +125,52 @@ class EmailPresenter(Presenter):
 
     def _present_total(self):
         presented_total = locale.format_string("%d", self.customer.get_total(), grouping=True)
-        return f'Total: ${presented_total}'
+        return f'${presented_total}'
 
+class ScriptConfiguration():
+    @staticmethod
+    def configure_script():
+        global CUSTOMER_NAME_ROW_INDEX
+        global CUSTOMER_EMAIL_ROW_INDEX
+        global FIRST_PRODUCT_COLUMN
+        global LAST_PRODUCT_COLUMN
+        global TOTAL_COLUMN
+
+        csv_file = sys.argv[1]
+        template_file = sys.argv[2]
+
+        customer_email_row_index = input(f'Ingresa la columna donde esta el email del consumidor (valor actual es {number_to_column(CUSTOMER_EMAIL_ROW_INDEX)})')
+        customer_email_row_index = parse_int(customer_email_row_index)
+        if customer_email_row_index != -1:
+            CUSTOMER_EMAIL_ROW_INDEX = customer_email_row_index
+
+        customer_name_row_index = input(f'Ingresa la columna donde esta el nombre del consumidor (valor actual es {number_to_column(CUSTOMER_NAME_ROW_INDEX)})')
+        customer_name_row_index = parse_int(customer_name_row_index)
+        if customer_name_row_index != -1:
+            CUSTOMER_NAME_ROW_INDEX = customer_name_row_index
+
+        first_product_column = input(f'Ingresa la primera columna de productos (valor actual es {number_to_column(FIRST_PRODUCT_COLUMN)})')
+        first_product_column = parse_int(first_product_column)
+        if first_product_column != -1:
+            FIRST_PRODUCT_COLUMN = first_product_column
+
+        last_product_column = input(f'Ingresa la ultima columna de productos (valor actual es {number_to_column(LAST_PRODUCT_COLUMN)})')
+        last_product_column = parse_int(last_product_column)
+        if last_product_column != -1:
+            LAST_PRODUCT_COLUMN = last_product_column
+
+        total_column = input(f'Ingresa la columna de totales (valor actual es {number_to_column(TOTAL_COLUMN)})')
+        total_column = parse_int(total_column)
+        if total_column != -1:
+            TOTAL_COLUMN = total_column
+
+        return csv_file, template_file
 
 if __name__ == '__main__':
+    csv_file, template_file = ScriptConfiguration.configure_script()
 
-
-    csv_file = sys.argv[1]
-    template_file = sys.argv[2]
     template = None
-
-    with open(f'./template.txt', 'r') as template_file:
+    with open(f'{template_file}', 'r') as template_file:
         template = Template(template_file.read())
 
 
