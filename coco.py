@@ -2,6 +2,7 @@
 import sys
 import csv
 import locale
+import math
 from string import Template
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
@@ -23,19 +24,20 @@ def parse_int(number):
 def slice_products_columns(row):
     return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
 
-def column_to_number(column):
-    total_characters = ord('z') - ord('a') + 1
+def column_to_number(col):
+    total_characters = ord('z') - ord('a')
 
     def new_ord(col):
         return ord(col) - ord('a')
 
-    col = column
     acc = 0
-
     for i, char in enumerate(reversed(col)):
-        acc += new_ord(col[i]) + i * total_characters
+        if new_ord(char) == 0:
+            acc += math.pow(total_characters, i)
+        else:
+            acc += new_ord(char) * math.pow(total_characters, i)
 
-    return acc
+    return int(acc)
 
 
 def number_to_column(number):
