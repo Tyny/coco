@@ -5,12 +5,12 @@ import locale
 from string import Template, ascii_letters
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
-FIRST_PRODUCT_COLUMN = 8
+FIRST_PRODUCT_COLUMN = 9
 LAST_PRODUCT_COLUMN = 131
 TOTAL_COLUMN = 132
 
-CUSTOMER_NAME_ROW_INDEX = 3
-CUSTOMER_EMAIL_ROW_INDEX = 1
+CUSTOMER_NAME_ROW_INDEX = 4
+CUSTOMER_EMAIL_ROW_INDEX = 2
 
 
 def parse_int(number):
@@ -21,7 +21,7 @@ def parse_int(number):
 
 
 def slice_products_columns(row):
-    return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
+    return row[FIRST_PRODUCT_COLUMN - 1:LAST_PRODUCT_COLUMN]
 
 
 def column_to_number(col):
@@ -49,16 +49,16 @@ class Customer:
         self.csv_row = csv_row
 
     def get_name(self):
-        return self.csv_row[CUSTOMER_NAME_ROW_INDEX]
+        return self.csv_row[CUSTOMER_NAME_ROW_INDEX - 1]
 
     def get_email(self):
-        return self.csv_row[CUSTOMER_EMAIL_ROW_INDEX]
+        return self.csv_row[CUSTOMER_EMAIL_ROW_INDEX - 1]
 
     def get_orders(self):
         return slice_products_columns(self.csv_row)
 
     def get_total(self):
-        return int(self.csv_row[TOTAL_COLUMN])
+        return int(self.csv_row[TOTAL_COLUMN - 1])
 
 
 class CustomerOrder:
