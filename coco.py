@@ -25,31 +25,18 @@ def slice_products_columns(row):
     return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
 
 def column_to_number(col):
-    total_characters = ord('z') - ord('a')
+    num = 0
+    for c in col:
+        if c in string.ascii_letters:
+            num = num * 26 + (ord(c.upper()) - ord('A')) + 1
+    return num
 
-    def new_ord(col):
-        return ord(col) - ord('a')
-
-    acc = 0
-    for i, char in enumerate(reversed(col)):
-        if new_ord(char) == 0:
-            acc += math.pow(total_characters, i)
-        else:
-            acc += new_ord(char) * math.pow(total_characters, i)
-
-    return int(acc)
-
-
-def number_to_column(number):
-    total_characters = ord('z') - ord('a') + 1
-
-    mod = (number % total_characters)
-    times = (number // total_characters)
-
-    if times > 0:
-        return chr(ord('a') + times - 1).upper() + chr(ord('a') + mod).upper()
-    else:
-        return chr(ord('a') + mod).upper()
+def number_to_column(n):
+    name = ''
+    while n > 0:
+        n, r = divmod(n - 1, 26)
+        name = chr(r + ord('A')) + name
+    return name
 
 
 class Customer:
