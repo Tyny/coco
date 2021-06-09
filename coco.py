@@ -2,8 +2,7 @@
 import sys
 import csv
 import locale
-import math
-from string import Template
+from string import Template, ascii_letters
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
 FIRST_PRODUCT_COLUMN = 8
@@ -24,12 +23,14 @@ def parse_int(number):
 def slice_products_columns(row):
     return row[FIRST_PRODUCT_COLUMN:LAST_PRODUCT_COLUMN + 1]
 
+
 def column_to_number(col):
     num = 0
     for c in col:
-        if c in string.ascii_letters:
+        if c in ascii_letters:
             num = num * 26 + (ord(c.upper()) - ord('A')) + 1
     return num
+
 
 def number_to_column(n):
     name = ''
