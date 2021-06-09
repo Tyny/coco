@@ -152,6 +152,7 @@ class ScriptConfiguration():
 
         csv_file = sys.argv[1]
         template_file = sys.argv[2]
+        output_file = sys.argv[3]
 
         customer_email_row_index = input(f'Ingresa la columna donde esta el email del consumidor (valor actual es {number_to_column(CUSTOMER_EMAIL_ROW_INDEX)}): ')
         customer_email_row_index = customer_email_row_index.strip().lower()
@@ -188,10 +189,10 @@ class ScriptConfiguration():
         print("TOTAL_COLUMN", number_to_column(TOTAL_COLUMN))
         print("-------------------------------------------------------------------------------------------")
 
-        return csv_file, template_file
+        return csv_file, template_file, output_file
 
 if __name__ == '__main__':
-    csv_file, template_file = ScriptConfiguration.configure_script()
+    csv_file, template_file, output_file = ScriptConfiguration.configure_script()
 
     template = None
     with open(f'{template_file}', 'r') as template_file:
@@ -211,7 +212,11 @@ if __name__ == '__main__':
             orders = CustomerOrdersFactory.create_customer_order(products, customer)
             presenters.append(EmailPresenter(template, customer, orders))
 
-        for presenter in presenters:
-            print("----------------------------------------------------------------------")
-            print(presenter.present())
+        with open(f'coco.{output_file}', 'w') as output:
+            for presenter in presenters:
+                output.write(presenter.present())
+                output.write("---------------------------------------------------")
+                output.write("\n\n")
+
+    print(f'Encontra el resultado en {output_file}! :)')
 
