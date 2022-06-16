@@ -5,24 +5,8 @@ import locale
 from string import Template, ascii_letters
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
-FIRST_PRODUCT_COLUMN = 9
-LAST_PRODUCT_COLUMN = 131
-TOTAL_COLUMN = 132
-
-CUSTOMER_NAME_ROW_INDEX = 4
-CUSTOMER_EMAIL_ROW_INDEX = 2
-
-
-def parse_int(number):
-    try:
-        return int(number)
-    except ValueError:
-        return -1
-
-
-def slice_products_columns(row):
-    return row[FIRST_PRODUCT_COLUMN - 1:LAST_PRODUCT_COLUMN]
-
+import sqlalchemy
+print(sqlalchemy.__version__)
 
 def column_to_number(col):
     num = 0
@@ -38,6 +22,27 @@ def number_to_column(n):
         n, r = divmod(n - 1, 26)
         name = chr(r + ord('A')) + name
     return name
+
+FIRST_PRODUCT_COLUMN = column_to_number("i")
+LAST_PRODUCT_COLUMN = column_to_number("dw")
+TOTAL_COLUMN = column_to_number("dw")
+
+CUSTOMER_NAME_ROW_INDEX = column_to_number("d")
+CUSTOMER_EMAIL_ROW_INDEX = column_to_number("b")
+
+
+def parse_int(number):
+    try:
+        return int(number)
+    except ValueError:
+        return -1
+
+
+def slice_products_columns(row):
+    return row[FIRST_PRODUCT_COLUMN - 1:LAST_PRODUCT_COLUMN]
+
+
+
 
 
 class Customer:
@@ -58,7 +63,7 @@ class Customer:
         return slice_products_columns(self.csv_row)
 
     def get_total(self):
-        return int(self.csv_row[TOTAL_COLUMN - 1])
+        return int(self.csv_row[TOTAL_COLUMN])
 
 
 class CustomerOrder:
@@ -114,7 +119,7 @@ class EmailPresenter(Presenter):
         return f'Enviar a: {self.customer.get_email()}\n\n{self.present_body()}'
 
     def present_body(self):
-        return template.substitute({
+        return self.template.substitute({
             'usuario': self.customer.get_name().title(),
             "pedidos": self._orders_table(),
             "total": self._present_total()}
@@ -181,7 +186,7 @@ class ScriptConfiguration():
 
         return csv_file, template_file, output_file
 
-if __name__ == '__main__':
+def main():
     csv_file, template_file, output_file = ScriptConfiguration.configure_script()
 
     template = None
@@ -209,4 +214,8 @@ if __name__ == '__main__':
                 output.write("\n\n")
 
     print(f'Encontra el resultado en {output_file}! :)')
+
+if __name__ == '__main__':
+    main()
+
 

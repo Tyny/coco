@@ -1,3 +1,5 @@
 Coco.iml
 .idea
 coco.*.txt
+env
+__pycache__
