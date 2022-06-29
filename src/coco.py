@@ -106,7 +106,7 @@ class OrderPresenter(Presenter):
         self._order = order
 
     def present(self):
-        return f'{self._order.get_qty()} - {self._order.get_product().upper()}'
+        return f'{self._order.get_qty()} u. {self._order.get_product().upper()}'
 
 
 class EmailPresenter(Presenter):

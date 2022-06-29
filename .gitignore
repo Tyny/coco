@@ -3,3 +3,4 @@ Coco.iml
 coco.*.txt
 env
 __pycache__
+.vscode
