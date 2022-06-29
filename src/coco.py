@@ -5,8 +5,8 @@ import locale
 from string import Template, ascii_letters
 locale.setlocale(locale.LC_ALL, 'es_AR.utf8')
 
-import sqlalchemy
-print(sqlalchemy.__version__)
+# import sqlalchemy
+# print(sqlalchemy.__version__)
 
 def column_to_number(col):
     num = 0
