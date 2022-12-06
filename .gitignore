@@ -4,3 +4,4 @@ coco.*.txt
 env
 __pycache__
 .vscode
+last_run.json

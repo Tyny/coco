@@ -15,14 +15,6 @@ def column_to_number(col):
             num = num * 26 + (ord(c.upper()) - ord('A')) + 1
     return num
 
-
-def number_to_column(n):
-    name = ''
-    while n > 0:
-        n, r = divmod(n - 1, 26)
-        name = chr(r + ord('A')) + name
-    return name
-
 FIRST_PRODUCT_COLUMN = column_to_number("i")
 LAST_PRODUCT_COLUMN = column_to_number("dw")
 TOTAL_COLUMN = column_to_number("dw")
@@ -30,6 +22,12 @@ TOTAL_COLUMN = column_to_number("dw")
 CUSTOMER_NAME_ROW_INDEX = column_to_number("d")
 CUSTOMER_EMAIL_ROW_INDEX = column_to_number("b")
 
+def number_to_column(n):
+    name = ''
+    while n > 0:
+        n, r = divmod(n - 1, 26)
+        name = chr(r + ord('A')) + name
+    return name
 
 def parse_int(number):
     try:
@@ -40,9 +38,6 @@ def parse_int(number):
 
 def slice_products_columns(row):
     return row[FIRST_PRODUCT_COLUMN - 1:LAST_PRODUCT_COLUMN]
-
-
-
 
 
 class Customer:
@@ -144,6 +139,11 @@ class ScriptConfiguration():
         global FIRST_PRODUCT_COLUMN
         global LAST_PRODUCT_COLUMN
         global TOTAL_COLUMN
+        
+        # READ GLOBAL VARIABLES FROM LAST RUN
+        read_from_last_run()
+
+        print(TOTAL_COLUMN)
 
         csv_file = sys.argv[1]
         template_file = sys.argv[2]
@@ -184,6 +184,9 @@ class ScriptConfiguration():
         print("TOTAL_COLUMN", number_to_column(TOTAL_COLUMN))
         print("-------------------------------------------------------------------------------------------")
 
+        save_last_run()
+
+
         return csv_file, template_file, output_file
 
 def main():
@@ -217,5 +220,58 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+######################################################################## CODE GENERATE WITH OPEN AI HELP #######################################################################
+
+import json
+
+def read_from_last_run():
+    # Define some default values for the variables
+    global CUSTOMER_EMAIL_ROW_INDEX
+    global CUSTOMER_NAME_ROW_INDEX
+    global FIRST_PRODUCT_COLUMN
+    global LAST_PRODUCT_COLUMN
+    global TOTAL_COLUMN
+
+    # Try to read the last_run.json file
+    try:
+        with open("last_run.json", "r") as f:
+            data = json.load(f)
+
+            if "CUSTOMER_EMAIL_ROW_INDEX" in data:
+                CUSTOMER_EMAIL_ROW_INDEX = data["CUSTOMER_EMAIL_ROW_INDEX"]
+
+            if "CUSTOMER_NAME_ROW_INDEX" in data:
+                CUSTOMER_NAME_ROW_INDEX = data["CUSTOMER_NAME_ROW_INDEX"]
+
+            if "FIRST_PRODUCT_COLUMN" in data:
+                FIRST_PRODUCT_COLUMN = data["FIRST_PRODUCT_COLUMN"]
+
+            if "LAST_PRODUCT_COLUMN" in data:
+                LAST_PRODUCT_COLUMN = data["LAST_PRODUCT_COLUMN"]
+
+            if "TOTAL_COLUMN" in data:
+                TOTAL_COLUMN = data["TOTAL_COLUMN"]
+    except FileNotFoundError:
+        # Handle the exception
+        print("el archivo last_run.json no existe, pero sera creado luego de que termine esta ejecucion")
+
+def save_last_run():
+    # Create a dictionary with the global variables and their values
+    data = {
+        "CUSTOMER_EMAIL_ROW_INDEX": CUSTOMER_EMAIL_ROW_INDEX,
+        "CUSTOMER_NAME_ROW_INDEX": CUSTOMER_NAME_ROW_INDEX,
+        "FIRST_PRODUCT_COLUMN": FIRST_PRODUCT_COLUMN,
+        "LAST_PRODUCT_COLUMN": LAST_PRODUCT_COLUMN,
+        "TOTAL_COLUMN": TOTAL_COLUMN
+    }
+
+    # Write the data to the last_run.json file
+    with open("last_run.json", "w") as f:
+        json.dump(data, f)
+
+
 
 
