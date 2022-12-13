@@ -1,4 +1,7 @@
 import requests
+import os
+
+MY_API_KEY = os.environ.get('SENDINBLUE_API_KEY_CORRENTOSA')
 
 
 def send_email(text, mail):
@@ -21,7 +24,7 @@ def send_email(text, mail):
     headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "api-key": "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"
+        "api-key": MY_API_KEY
     }
 
     response = requests.post(url, json=payload, headers=headers)
@@ -33,7 +36,7 @@ def check_sended_mails():
 
     headers = {
         "accept": "application/json",
-        "api-key": "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"
+        "api-key": MY_API_KEY
     }
 
     response = requests.get(url, headers=headers)
@@ -62,7 +65,7 @@ def send_email_template(text, mail, month):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "api-key": "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"
+        "api-key": MY_API_KEY
     }
 
     response = requests.post(url, json=payload, headers=headers)
