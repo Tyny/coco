@@ -1,10 +1,33 @@
 Hola $usuario!
 
-Este es tu pedido:
+Gracias por ser parte de la Compra comunitaria de Enero organizada por La Correntosa🌊💫. 
+
+Este es el  pedido que cargaste en el formulario. Te pedimos por favor que revises las cantidades y valores 👀👇 
 
 $pedidos
 
 El total es $total
 
-Retira tu pedido el dia Martes.
-Muchas gracias!
+Estos son los productos faltantes, que se descontarán del pedido o se reemplazan por otra marca de las mismas características:
+
+Aceite de oliva extra virgen "Cuchiyaco" x 5 Lt. (Vinieron de menos)
+Arroz integral "Naturaleza Viva" x 1 kg - no hay stock
+Fécula de de mandioca "Aldema" x 1 kg. (se reemplaza por Flor del Jardín)
+Fideos de maíz capia y habas "Cauqueva" x 300 gr. (se reemplaza por otro sabor por falta de stock)
+Harina blanca de trigo 000 y 0000 1 kg (se reemplaza por SICSA o La Sarita)
+Garbanzos "Salve la tierra" x 5 kg (Vinieron de menos)
+
+Avisos importantes: 
+
+- La entrega de la mercadería será este sábado 21 de enero de 9.30 a 12.30 hs 🙏🕐  
+- Lugar de entrega: CCI (Maestro Perez y Primeros Pobladores, Mallín)
+- Si pediste bolsón de verduras, no te olvides de traer tu bolsa de tela, de lo contrario se adiciona el costo al pedido
+- Si tenés envases de productores locales, traelos
+- El pedido se abona en efectivo el día de la entrega. 
+
+
+Contamos con vos! 👋 
+
+¡Muchas gracias! 
+
+La Correntosa 🌊💫

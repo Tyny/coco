@@ -1,3 +1,8 @@
+### Setup
+
+pip install -r requirements
+
+
 ### Development
 
 
